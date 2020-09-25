@@ -1,0 +1,33 @@
+{
+  "name": "tempnode",
+  "version": "0.1",
+  "description": "upload test",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.20",
+    "@google-cloud/speech": "^4.1.2",
+    "@google-cloud/text-to-speech": "^3.1.0",
+    "@google-cloud/translate": "^6.0.2",
+    "@google-cloud/video-intelligence": "^3.0.1",
+    "child_process": "^1.0.2",
+    "delay": "^4.4.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.0",
+    "ffmpeg": "^0.0.4",
+    "ffmpeg-static": "^4.2.7",
+    "fluent-ffmpeg": "^2.1.2",
+    "formidable": "^1.2.2",
+    "gstt-to-srt-converter": "^1.0.5",
+    "gtts": "^0.2.1",
+    "node-ffprobe": "^3.0.0",
+    "p-map": "^4.0.0",
+    "shortid": "^2.2.15",
+    "socket.io": "^2.3.0",
+    "subsrt": "^1.1.1",
+    "subtitle": "^3.0.0"
+  }
+}
