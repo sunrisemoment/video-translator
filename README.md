@@ -42,6 +42,6 @@ Installation and usage
           index.js line : 119 , 222 -> vidoeUtil.addSubtitles, vidoeUtil.mergeMedia functions
           Newly generated videos are saved in /uploads/ directory with name : "timestamp + _filename_1.mp4" and "timestamp + _filename_2.mp4"
           
-          Finally server response to client with "translateResult" event via socket emit.
+Finally server response to client with "translateResult" event via socket emit. Parameter contains above 2 video paths.
 
           
