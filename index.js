@@ -61,8 +61,8 @@ app.post('/process/uploadFile', function(req, res) {
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ message: err, success: false }));
         } else {
-          conver_Video_to_Audio(newpath, 'en-US', 'ko');
-          uploadedVideoPath = newpath;
+          //conver_Video_to_Audio(newpath, 'en-US', 'ko');
+          //uploadedVideoPath = newpath;
           res.status(200);
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ filePath: newpath, success: true }));
