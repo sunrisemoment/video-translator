@@ -9,7 +9,8 @@ var textToSpeech = require('./text_to_speech.js');
 var speechToText = require('./speech_to_text.js');
 var gttsConverter = require('./gtts_converter.js');
 var translate = require('./translate_srt.js');
-var vidoeUtil = require('./video_utils.js')
+var vidoeUtil = require('./video_utils.js');
+var fcm = require('./fcm.js');
 var express = require('express');
 
 var app = express();
@@ -48,14 +49,23 @@ app.get('/process/getTargetList', function(req, res){
 
 let uploadedVideoPath = '';
 app.post('/process/uploadFile', function(req, res) {
-	console.log('uploadFile request received');
+	console.log("file upload request...");
   if (req.url == '/process/uploadFile') {
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
+		if(err) {
+			console.log(err);
+			res.status(400);
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify({ message: err, success: false }));
+			return;
+		}
+		console.log(files);
 		var timestamp = new Date().getTime();
       var oldpath = files.file.path;
       var newpath = 'uploads/' + timestamp + '_' + files.file.name;
       fs.rename(oldpath, newpath, function (err) {
+		  console.log(err);
         if (err) {
           res.status(400);
           res.setHeader('Content-Type', 'application/json');
@@ -72,16 +82,35 @@ app.post('/process/uploadFile', function(req, res) {
   }
 });
 
+let fcmToken = '';
+let result;
+
 io.on('connection', function(socket){
   console.log('socket connected');
 	socketio = socket;
-  socket.on('translateVideo', (data) => {
+	
+	socketio.on('fcmToken', (data) => {
+		fcmToken = data;
+		console.log(data);
+	});
+	
+	socketio.on('requestResult', (data) => {
+		if(result) {
+			socketio.emit('results', result);
+		}
+	});
+	
+	socketio.on('test_fcm', (data) => {
+		fcm.sendPushNotification(fcmToken, "Translation completed", "Video translation completed successfully!");
+	});
+	
+	socket.on('translateVideo', (data) => {
 
-    socket.emit('progress', 'Processing...');
-    console.log(data);
-    var sourceLang = data.sourceLang.value;
-    var targetLang = data.targetLang.value;
-    uploadedVideoPath = data.filePath;
+		socket.emit('progress', 'Processing...');
+		console.log(data);
+		var sourceLang = data.sourceLang.value;
+		var targetLang = data.targetLang.value;
+		uploadedVideoPath = data.filePath;
     
     conver_Video_to_Audio(uploadedVideoPath, sourceLang, targetLang);
   });
@@ -127,8 +156,11 @@ function translate_srt(sourcePath, sourceLang, targetLang, fileName) {
               result2: result2Video
             };
             console.log(result2Video);
+			result = response;
+			fcm.sendPushNotification(fcmToken, "Translation completed", "Video translation completed successfully!");
             socketio.emit('translateResult', response);  
           } else {
+			  fcm.sendPushNotification(fcmToken, "Translation failed", err);
             socketio.emit('translateResult', err);
           }
         })

@@ -23,10 +23,9 @@
       };
       const config = {
         encoding: 'MP3',
-        model: 'video',
         sampleRateHertz: 16000,
         languageCode: language,//'en-US',
-        enableWordConfidence: true,
+        //enableWordConfidence: true,
         enableWordTimeOffsets: true,
         enableAutomaticPunctuation: true,
       };
